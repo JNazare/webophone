@@ -24,19 +24,19 @@ char ctrlKey = KEY_LEFT_GUI;
 char tabKey = KEY_TAB;
 char returnKey = KEY_RETURN;
 
+// VARIABLE SETUP
 int count=0;
 int numTabs=15;
-String phoneNum=String("");
 boolean openedSkype=false;
-boolean openedDialpad=false;
-boolean placedCall=false;
- 
+String phoneNum=String("");
+
+// KEYPAD CREATION
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 void setup() {
   Serial.begin(9600);
   Keyboard.begin();
-  t.every(10000, openSkype);
+  t.every(10000, openSkype); // try to open Skype every 10 seconds
 }
 
 void loop() {
@@ -55,38 +55,37 @@ void loop() {
   }
 }
 
+// Open Skype and the Skype dialpad
 void openSkype() {
+  // open skype if the arduino has not opened Skype before
   if(openedSkype==false){
     Serial.println("Opening Skype...");
     Keyboard.press(ctrlKey);
     Keyboard.press('1');
     delay(100);
     Keyboard.releaseAll();
-    delay(2500);
+    delay(3000);
     openedSkype=!openedSkype;
   }
+  // regardless, try to open the dialpad
   openDialpad();
 }
 
+// Open the Skype dialpad
 void openDialpad(){
-  if(openedDialpad==false){
     Serial.println("Opening Dialpad...");
     Keyboard.press(ctrlKey);
     Keyboard.press('2');
     delay(100);
     Keyboard.releaseAll();
-    openedDialpad=!openedDialpad;
-  }
 }
 
+// Why is placed call here?
 void placeCall(){
-  if(placedCall==false){
     for (int tab = 0; tab < numTabs; tab++) {
       Keyboard.press(tabKey);
       Keyboard.releaseAll();
     }
     Keyboard.press(returnKey);
     Keyboard.releaseAll();
-    placedCall=!placedCall;
-  }
 }
